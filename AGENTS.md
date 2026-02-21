@@ -31,6 +31,7 @@ src/
 │   └── shared/         # Custom shared components (Layout, Sidebar, Navbar)
 ├── hooks/              # Custom React hooks (useAttendance, useAuth, etc.)
 ├── modules/            # Domain-specific logic and complex components
+│   ├── dashboard/      # Dashboard with charts and live tracking
 │   ├── attendance/     # Attendance tracking logic and views
 │   ├── students/       # Student management logic and views
 │   ├── buses/          # Bus management logic and views

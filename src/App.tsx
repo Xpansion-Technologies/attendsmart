@@ -4,11 +4,12 @@ import { StudentList } from './modules/students/StudentList';
 import { BusList } from './modules/buses/BusList';
 import { DriverList } from './modules/drivers/DriverList';
 import { ParentList } from './modules/parents/ParentList';
+import { Dashboard } from './modules/dashboard/Dashboard';
 
 import { AttendanceList } from './modules/attendance/AttendanceList';
 
 function App() {
-  const [activeTab, setActiveTab] = useState('Students');
+  const [activeTab, setActiveTab] = useState('Dashboard');
 
   const renderContent = () => {
     switch (activeTab) {
@@ -21,15 +22,11 @@ function App() {
       case 'Parents':
         return <ParentList />;
       case 'Dashboard':
-        return (
-          <div className="flex items-center justify-center h-64 text-gray-400">
-            Dashboard view coming soon...
-          </div>
-        );
+        return <Dashboard />;
       case 'Attendance':
         return <AttendanceList />;
       default:
-        return <StudentList />;
+        return <Dashboard />;
     }
   };
 

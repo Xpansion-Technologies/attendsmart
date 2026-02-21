@@ -11,6 +11,7 @@ import {
   MessageSquare,
   User
 } from 'lucide-react';
+import BrandingImg from '../../assets/Branding.png';
 
 interface LayoutProps {
   children: ReactNode;
@@ -30,8 +31,8 @@ const Sidebar = ({ activeTab, onTabChange }: { activeTab: string, onTabChange: (
 
   return (
     <div className="w-64 bg-dps-teal text-white h-screen fixed left-0 top-0 flex flex-col">
-      <div className="p-6 text-xl font-bold border-b border-white/10">
-        SchAttendance
+      <div className="p-4 border-b border-white/10">
+        <img src={BrandingImg} alt="DPS Greater Noida Logo" className="w-full h-auto" />
       </div>
       
       <div className="p-4 flex items-center space-x-3 border-b border-white/10">
