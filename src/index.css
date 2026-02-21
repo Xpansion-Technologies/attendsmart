@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --dps-teal: #004b61;
+  --dps-cream: #f4f1ea;
+  --dps-green: #006400;
+  --dps-gold: #d4af37;
+}
+
+body {
+  @apply bg-dps-cream text-gray-900;
+}
