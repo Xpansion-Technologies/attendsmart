@@ -1,73 +1,87 @@
-# React + TypeScript + Vite
+# AttendSmart - Bus Attendance Admin Module
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, high-performance, and user-friendly administration dashboard for managing student bus attendance, specifically designed for **Delhi Public School (DPS) Greater Noida**.
 
-Currently, two official plugins are available:
+## 🚀 Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+AttendSmart is a comprehensive solution for schools to monitor and manage their transportation fleet. It provides real-time visibility into student boarding, bus routes, driver performance, and guardian communication, all wrapped in a professional and accessible interface.
 
-## React Compiler
+### Key Objectives
+- **Real-Time Visibility**: Instant updates on student boarding/deboarding.
+- **Efficient Fleet Management**: Manage routes, shifts, and driver assignments seamlessly.
+- **Enhanced Safety**: Direct links between students, parents, and drivers for rapid communication.
+- **Data-Driven Insights**: Visualize attendance trends and bus capacities via interactive dashboards.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## ✨ Features
 
-## Expanding the ESLint configuration
+- **📊 Live Dashboard**: Real-time stats, interactive student attendance charts (Bar Charts), and shift distribution (Donut Charts) via Recharts.
+- **👥 Student Management**: Full CRUD operations for student records, including class assignment, guardian links, and bus routing.
+- **🚍 Bus Fleet Control**: Track bus numbers, routes, and shifts (Morning/Afternoon/Evening) with capacity monitoring.
+- **📅 Attendance Summary**: Trip-based attendance logs with detailed student status (Present/Absent) and scan times.
+- **👨‍✈️ Driver Portal**: Manage driver credentials, contact information, and assigned bus schedules.
+- **🛡️ Parent/Guardian Management**: Secure database of contact details and home addresses for every student.
+- **🗺️ Live Bus Tracking (Mock)**: Visual tracking of the fleet on an interactive map with status indicators (Moving/Delayed/Stopped).
+- **📋 Popup Modals**: Clean, soft-shadowed modals for all entry and edit forms, ensuring a seamless user experience.
+- **📱 Responsive Design**: Fully responsive layout optimized for desktop and tablet administrative use.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🎨 UI Library & Tech Stack
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+AttendSmart is built using the latest modern web technologies:
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- **React 19**: Leveraging the newest features for performance and scalability.
+- **TypeScript**: Ensuring type safety and robust code architecture.
+- **Vite**: Ultra-fast build tool and development server.
+- **Tailwind CSS**: For utility-first, highly customizable styling.
+- **Lucide React**: A beautiful and consistent icon library for modern UI design.
+- **Recharts**: For responsive and interactive data visualizations.
+- **Custom UI Components**: Built using **React Composition Patterns** (Compound Components, Lifting State) to ensure flexibility and maintainability.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 🛠️ Getting Started Locally
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+To get started with AttendSmart on your local machine, follow these steps:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Prerequisites
+- [Node.js](https://nodejs.org/) (v18.0.0 or higher recommended)
+- [npm](https://www.npmjs.com/) (v9.0.0 or higher)
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### Installation
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/your-repo/attendsmart.git
+   cd attendsmart
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+3. **Start the development server**:
+   ```bash
+   npm run dev
+   ```
+
+4. **Build for production**:
+   ```bash
+   npm run build
+   ```
+
+## 🗺️ Project Roadmap
+
+- [x] **Phase 1: Foundation**: Initialize React/Vite project with Tailwind and core UI components.
+- [x] **Phase 2: Management Modules**: Complete CRUD for Students, Buses, Drivers, and Parents.
+- [x] **Phase 3: Visual Analytics**: Integrated Recharts for live dashboard metrics.
+- [x] **Phase 4: Attendance Logic**: Detailed trip-based summary and student boarding logs.
+- [ ] **Phase 5: Real-time GPS Integration**: Hardware synchronization for live GPS data and NFC/QR scanning.
+- [ ] **Phase 6: Notifications**: SMS and Push notifications for parents when students board or deboard.
+- [ ] **Phase 7: AI Route Optimization**: Intelligent routing to reduce fuel consumption and travel time.
+- [ ] **Phase 8: Mobile Apps**: Dedicated apps for Drivers (Attendance Scanning) and Parents (Live Tracking).
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+Built with ❤️ for **Delhi Public School (DPS) Greater Noida**.
