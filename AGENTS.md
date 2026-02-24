@@ -14,12 +14,12 @@ This project aims to build a modern, user-friendly online administration module 
 
 ### Core Modules
 
-1.  **Dashboard**: Overview of daily attendance, active buses, and key metrics.
-2.  **Students Management**: CRUD operations for student records, including class, guardian, bus assignment, NFC UID, and QR code generation.
-3.  **Buses Management**: Managing bus routes, capacity, and assignments.
-4.  **Attendance**: Real-time tracking and historical logs of bus attendance.
-5.  **Drivers**: Driver information, contact details, and assigned buses.
-6.  **Parents/Guardians**: Contact information and student links.
+1.  **Dashboard**: Overview of daily attendance, active buses, and key metrics. (Supabase Realtime)
+2.  **Students Management**: CRUD operations via Supabase for student records.
+3.  **Buses Management**: Fleet management with driver associations.
+4.  **Attendance**: Real-time tracking and historical logs stored in Supabase.
+5.  **Drivers/Staff**: Authentication and role-based access control (Admin, Teacher, Driver).
+6.  **Parents/Guardians**: Secure contact database.
 
 ### Project Directory Structure
 
@@ -38,9 +38,9 @@ src/
 │   ├── drivers/        # Driver management logic and views
 │   └── parents/        # Parent/Guardian management logic and views
 ├── pages/              # Top-level page components and routing
-├── services/           # API clients and data fetching logic
+├── services/           # Supabase client and data fetching logic
 ├── styles/             # Global CSS, Tailwind configuration, and themes
-├── types/              # TypeScript interfaces and types
+├── types/              # TypeScript interfaces and Database types (Supabase)
 └── utils/              # Helper functions and constants
 ```
 
@@ -48,6 +48,8 @@ src/
 
 This project leverages specialized agent skills to ensure high code quality and best practices:
 
+- **Supabase**: Backend-as-a-Service for Auth (Login/Logout), Database, and Realtime updates.
+- **Authentication**: Implemented via Supabase Auth with custom `profiles` management.
 - **vercel-composition-patterns**: Ensures flexible and maintainable component architecture, avoiding prop drilling and boolean prop explosion.
 - **vercel-react-best-practices**: Guides performance optimization, efficient rendering, and bundle size management.
 - **web-design-guidelines**: Ensures compliance with accessibility (a11y), responsive design, and general UI/UX best practices.

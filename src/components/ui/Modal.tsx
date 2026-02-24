@@ -1,14 +1,16 @@
 import { useEffect, type ReactNode } from 'react';
 import { X } from 'lucide-react';
+import { cn } from '../../utils/cn';
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
   children: ReactNode;
+  className?: string;
 }
 
-export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
+export const Modal = ({ isOpen, onClose, title, children, className }: ModalProps) => {
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -34,8 +36,11 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
       />
       
       {/* Modal Content */}
-      <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
-        <div className="flex items-center justify-between p-6 border-b">
+      <div className={cn(
+        "relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200 flex flex-col max-h-[90vh]",
+        className
+      )}>
+        <div className="flex items-center justify-between p-6 border-b flex-shrink-0">
           <h3 className="text-xl font-semibold text-gray-900">{title}</h3>
           <button 
             onClick={onClose}
@@ -45,7 +50,7 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
           </button>
         </div>
         
-        <div className="p-6">
+        <div className="p-6 overflow-y-auto flex-1">
           {children}
         </div>
       </div>

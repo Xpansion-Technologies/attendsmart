@@ -17,6 +17,7 @@ AttendSmart is a comprehensive solution for schools to monitor and manage their 
 - **📊 Live Dashboard**: Real-time stats, interactive student attendance charts (Bar Charts), and shift distribution (Donut Charts) via Recharts.
 - **👥 Student Management**: Full CRUD operations for student records, including class assignment, guardian links, and bus routing.
 - **🚍 Bus Fleet Control**: Track bus numbers, routes, and shifts (Morning/Afternoon/Evening) with capacity monitoring.
+- **🔐 Secure Authentication**: Administrator login screen powered by Supabase Auth with Role-Based Access Control (RBAC).
 - **📅 Attendance Summary**: Trip-based attendance logs with detailed student status (Present/Absent) and scan times.
 - **👨‍✈️ Driver Portal**: Manage driver credentials, contact information, and assigned bus schedules.
 - **🛡️ Parent/Guardian Management**: Secure database of contact details and home addresses for every student.
@@ -28,6 +29,7 @@ AttendSmart is a comprehensive solution for schools to monitor and manage their 
 
 AttendSmart is built using the latest modern web technologies:
 
+- **Supabase**: Powering Authentication, PostgreSQL database, and Realtime attendance updates.
 - **React 19**: Leveraging the newest features for performance and scalability.
 - **TypeScript**: Ensuring type safety and robust code architecture.
 - **Vite**: Ultra-fast build tool and development server.
@@ -57,7 +59,14 @@ To get started with AttendSmart on your local machine, follow these steps:
    npm install
    ```
 
-3. **Start the development server**:
+3. **Set up environment variables**:
+   - Copy `.env.example` to `.env`.
+   - Add your Supabase URL and Anon Key from the Supabase Dashboard (Project Settings -> API).
+   ```bash
+   cp .env.example .env
+   ```
+
+4. **Start the development server**:
    ```bash
    npm run dev
    ```
@@ -73,10 +82,12 @@ To get started with AttendSmart on your local machine, follow these steps:
 - [x] **Phase 2: Management Modules**: Complete CRUD for Students, Buses, Drivers, and Parents.
 - [x] **Phase 3: Visual Analytics**: Integrated Recharts for live dashboard metrics.
 - [x] **Phase 4: Attendance Logic**: Detailed trip-based summary and student boarding logs.
-- [ ] **Phase 5: Real-time GPS Integration**: Hardware synchronization for live GPS data and NFC/QR scanning.
-- [ ] **Phase 6: Notifications**: SMS and Push notifications for parents when students board or deboard.
-- [ ] **Phase 7: AI Route Optimization**: Intelligent routing to reduce fuel consumption and travel time.
-- [ ] **Phase 8: Mobile Apps**: Dedicated apps for Drivers (Attendance Scanning) and Parents (Live Tracking).
+- [x] **Phase 5: Authentication**: Secure login screen and protected administrative routes.
+- [ ] **Phase 6: Supabase Integration**: Migration from mock data to a live PostgreSQL database with RLS.
+- [ ] **Phase 7: Real-time GPS Integration**: Hardware synchronization for live GPS data and NFC/QR scanning.
+- [ ] **Phase 8: Notifications**: SMS and Push notifications for parents when students board or deboard.
+- [ ] **Phase 9: AI Route Optimization**: Intelligent routing to reduce fuel consumption and travel time.
+- [ ] **Phase 10: Mobile Apps**: Dedicated apps for Drivers (Attendance Scanning) and Parents (Live Tracking).
 
 ## 📄 License
 

@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { Eye, Clock, User, Bus as BusIcon, Calendar } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Eye, Clock, User, Bus as BusIcon, Calendar, Search } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Modal } from '../../components/ui/Modal';
+import { db } from '../../services/db';
 
 const INITIAL_ATTENDANCE = [
   {
@@ -56,8 +57,32 @@ const INITIAL_ATTENDANCE = [
 ];
 
 export const AttendanceList = () => {
+  const [attendance, setAttendance] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedTrip, setSelectedTrip] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      const data = await db.attendance.getAll();
+      if (data) {
+        setAttendance(data);
+      } else {
+        setAttendance(INITIAL_ATTENDANCE);
+      }
+      setLoading(false);
+    };
+    fetchData();
+  }, []);
+
+  const filteredAttendance = attendance.filter(log => 
+    log.driverName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    log.busNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    log.trip.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    log.dateTime.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleViewDetails = (trip: any) => {
     setSelectedTrip(trip);
@@ -68,7 +93,17 @@ export const AttendanceList = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold text-gray-800">Attendance Logs</h1>
-        <div className="flex space-x-3">
+        <div className="flex items-center space-x-3">
+          <div className="relative">
+            <input 
+              type="text" 
+              placeholder="Search logs..." 
+              className="pl-10 pr-4 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-dps-teal/20 focus:border-dps-teal bg-white"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
+          </div>
           <div className="bg-white border border-gray-200 rounded-lg px-4 py-2 flex items-center space-x-2 text-sm text-gray-600 shadow-sm">
             <Calendar size={16} />
             <span>Feb 21, 2026</span>
@@ -77,59 +112,75 @@ export const AttendanceList = () => {
       </div>
 
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-        <table className="w-full text-left border-collapse text-sm">
-          <thead className="bg-gray-50 border-b border-gray-200">
-            <tr>
-              <th className="px-6 py-4 font-semibold text-gray-700">Date/Time</th>
-              <th className="px-6 py-4 font-semibold text-gray-700">Trip</th>
-              <th className="px-6 py-4 font-semibold text-gray-700">Driver Name</th>
-              <th className="px-6 py-4 font-semibold text-gray-700">Bus Number</th>
-              <th className="px-6 py-4 font-semibold text-gray-700">Details</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {INITIAL_ATTENDANCE.map((log) => (
-              <tr key={log.id} className="hover:bg-gray-50 transition-colors">
-                <td className="px-6 py-4">
-                  <div className="flex flex-col">
-                    <span className="font-medium text-gray-900">{log.dateTime.split(' ')[0]}</span>
-                    <span className="text-xs text-gray-500">{log.dateTime.split(' ')[1]}</span>
-                  </div>
-                </td>
-                <td className="px-6 py-4">
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    log.trip.includes('Morning') ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-orange-700'
-                  }`}>
-                    {log.trip}
-                  </span>
-                </td>
-                <td className="px-6 py-4 text-gray-600">
-                  <div className="flex items-center space-x-2">
-                    <User size={14} className="text-gray-400" />
-                    <span>{log.driverName}</span>
-                  </div>
-                </td>
-                <td className="px-6 py-4 text-gray-600">
-                  <div className="flex items-center space-x-2">
-                    <BusIcon size={14} className="text-gray-400" />
-                    <span className="font-mono">{log.busNumber}</span>
-                  </div>
-                </td>
-                <td className="px-6 py-4">
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="space-x-1.5"
-                    onClick={() => handleViewDetails(log)}
-                  >
-                    <Eye size={14} />
-                    <span>View</span>
-                  </Button>
-                </td>
+        <div className="overflow-x-auto max-h-[600px] overflow-y-auto">
+          <table className="w-full text-left border-collapse text-sm">
+            <thead className="bg-gray-50 border-b border-gray-200 sticky top-0 z-10">
+              <tr>
+                <th className="px-6 py-4 font-semibold text-gray-700">Date/Time</th>
+                <th className="px-6 py-4 font-semibold text-gray-700">Trip</th>
+                <th className="px-6 py-4 font-semibold text-gray-700">Driver Name</th>
+                <th className="px-6 py-4 font-semibold text-gray-700">Bus Number</th>
+                <th className="px-6 py-4 font-semibold text-gray-700">Details</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {loading ? (
+                <tr>
+                  <td colSpan={5} className="px-6 py-8 text-center text-gray-500 italic animate-pulse">
+                    Fetching live attendance logs...
+                  </td>
+                </tr>
+              ) : filteredAttendance.length > 0 ? (
+                filteredAttendance.map((log) => (
+                  <tr key={log.id} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-6 py-4">
+                      <div className="flex flex-col">
+                        <span className="font-medium text-gray-900">{log.dateTime.split(' ')[0]}</span>
+                        <span className="text-xs text-gray-500">{log.dateTime.split(' ')[1]}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        log.trip.includes('Morning') ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-orange-700'
+                      }`}>
+                        {log.trip}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-gray-600">
+                      <div className="flex items-center space-x-2">
+                        <User size={14} className="text-gray-400" />
+                        <span>{log.driverName}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-gray-600">
+                      <div className="flex items-center space-x-2">
+                        <BusIcon size={14} className="text-gray-400" />
+                        <span className="font-mono">{log.busNumber}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="space-x-1.5"
+                        onClick={() => handleViewDetails(log)}
+                      >
+                        <Eye size={14} />
+                        <span>View</span>
+                      </Button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={5} className="px-6 py-8 text-center text-gray-500 italic">
+                    No logs found matching your search.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <Modal
@@ -156,9 +207,9 @@ export const AttendanceList = () => {
                 {selectedTrip?.attendance.length} Total
               </span>
             </h3>
-            <div className="border rounded-xl overflow-hidden">
-              <table className="w-full text-left text-sm">
-                <thead className="bg-gray-50 border-b">
+            <div className="border rounded-xl overflow-hidden max-h-[300px] overflow-y-auto">
+              <table className="w-full text-left text-sm border-collapse">
+                <thead className="bg-gray-50 border-b sticky top-0 z-10">
                   <tr>
                     <th className="px-4 py-3 font-medium text-gray-600">Student Name</th>
                     <th className="px-4 py-3 font-medium text-gray-600">Status</th>

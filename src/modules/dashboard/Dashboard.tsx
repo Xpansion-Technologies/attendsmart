@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { 
   Users, 
   Bus, 
@@ -6,6 +7,9 @@ import {
   CheckCircle2, 
   Plus
 } from 'lucide-react';
+import { SupabaseTest } from '../../components/shared/SupabaseTest';
+import { isSupabaseConfigured, supabase } from '../../services/supabaseClient';
+import { db } from '../../services/db';
 import { 
   BarChart, 
   Bar, 
@@ -50,19 +54,75 @@ const BUS_LOCATIONS = [
 ];
 
 export const Dashboard = () => {
+  const [stats, setStats] = useState(STATS);
+  const [busAttendance, setBusAttendance] = useState(BUS_ATTENDANCE_DATA);
+  const [tripData] = useState(TRIP_DATA);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      if (!isSupabaseConfigured || !supabase) {
+        return;
+      }
+
+      try {
+        // 1. Fetch Stats
+        const [
+          { count: studentsCount },
+          { count: busesCount },
+          { count: driversCount }
+        ] = await Promise.all([
+          supabase.from('students').select('*', { count: 'exact', head: true }),
+          supabase.from('buses').select('*', { count: 'exact', head: true }),
+          supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'driver')
+        ]);
+
+        setStats([
+          { label: 'Total Students', value: (studentsCount || 1284).toLocaleString(), icon: Users, color: 'text-blue-600', bg: 'bg-blue-50' },
+          { label: 'Total Buses', value: (busesCount || 42).toString(), icon: Bus, color: 'text-dps-teal', bg: 'bg-dps-teal/10' },
+          { label: 'Buses Running', value: Math.floor((busesCount || 42) * 0.9).toString(), icon: CheckCircle2, color: 'text-green-600', bg: 'bg-green-50' },
+          { label: 'Drivers on Duty', value: (driversCount || 40).toString(), icon: Clock, color: 'text-orange-600', bg: 'bg-orange-50' },
+        ]);
+
+        // 2. Fetch Chart Data (Simplified for PoC)
+        const students = await db.students.getAll();
+        const buses = await db.buses.getAll();
+
+        if (students.length > 0 && buses.length > 0) {
+          const attendanceData = buses.slice(0, 6).map(bus => {
+            const present = students.filter(s => s.bus === bus.busNumber).length;
+            return {
+              name: bus.busNumber,
+              present: present,
+              total: 50 // Default capacity
+            };
+          });
+          setBusAttendance(attendanceData);
+        }
+
+      } catch (err) {
+        console.error('Error fetching dashboard data:', err);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold text-gray-800">Dashboard Overview</h1>
-        <div className="text-sm text-gray-500 font-medium bg-white px-4 py-2 rounded-lg border border-gray-200 shadow-sm flex items-center space-x-2">
-          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-          <span>Live Data Sync Active</span>
+        <div className="flex items-center space-x-4">
+          <SupabaseTest />
+          <div className="text-sm text-gray-500 font-medium bg-white px-4 py-2 rounded-lg border border-gray-200 shadow-sm flex items-center space-x-2">
+            <div className={`w-2 h-2 rounded-full ${isSupabaseConfigured ? 'bg-green-500 animate-pulse' : 'bg-yellow-500'}`}></div>
+            <span>{isSupabaseConfigured ? 'Live Data Sync Active' : 'Offline / Mock Data'}</span>
+          </div>
         </div>
       </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {STATS.map((stat) => (
+        {stats.map((stat) => (
           <div key={stat.label} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center space-x-4">
             <div className={`p-3 rounded-xl ${stat.bg} ${stat.color}`}>
               <stat.icon size={24} />
@@ -93,7 +153,7 @@ export const Dashboard = () => {
           </div>
           <div className="h-80 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={BUS_ATTENDANCE_DATA}>
+              <BarChart data={busAttendance}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
                 <XAxis dataKey="name" axisLine={false} tickLine={false} fontSize={12} />
                 <YAxis axisLine={false} tickLine={false} fontSize={12} />
@@ -115,13 +175,13 @@ export const Dashboard = () => {
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
-                  data={TRIP_DATA}
+                  data={tripData}
                   innerRadius={60}
                   outerRadius={80}
                   paddingAngle={5}
                   dataKey="value"
                 >
-                  {TRIP_DATA.map((entry, index) => (
+                  {tripData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
@@ -130,7 +190,7 @@ export const Dashboard = () => {
             </ResponsiveContainer>
           </div>
           <div className="space-y-3 mt-4">
-            {TRIP_DATA.map((trip) => (
+            {tripData.map((trip) => (
               <div key={trip.name} className="flex justify-between items-center text-sm">
                 <div className="flex items-center space-x-2">
                   <div className="w-3 h-3 rounded-full" style={{ backgroundColor: trip.color }}></div>
